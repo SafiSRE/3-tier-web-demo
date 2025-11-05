@@ -17,3 +17,15 @@ body{margin:0;color:#102a43;background:#f8fafc}
 .hero-title{font-size:44px;margin:0}
 .hero-sub{font-size:18px;margin-top:8px}
 .footer{padding:24px;text-align:center;color:#334e68}
+
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:140px;height:56px}
+
+
+.logo{width:140px;height:56px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-link{margin-left:8px;text-decoration:none;color:#0f172a;font-weight:600}
+.account-btn{background:#0ea5a4;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+.dropdown-menu{position:absolute;right:0;top:46px;background:white;border-radius:8px;box-shadow:0 8px 24px rgba(2,6,23,0.12);min-width:160px;overflow:hidden}
+.dropdown-item{display:block;padding:10px 12px;text-decoration:none;color:#0f172a;background:none;border:0;width:100%;text-align:left;cursor:pointer}
+.dropdown-item:hover{background:#f1f5f9}

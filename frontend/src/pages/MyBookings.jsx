@@ -5,7 +5,7 @@ export default function MyBookings(){
   const [bookings, setBookings] = useState([]);
   useEffect(()=> {
     const token = localStorage.getItem('token');
-    if(!token) return;
+    if(!token) { window.location='/login'; return; }
     fetch(API + '/bookings/mine', { headers: { Authorization: 'Bearer ' + token } })
       .then(r=>r.json()).then(setBookings).catch(console.error)
   },[]);

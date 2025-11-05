@@ -41,7 +41,8 @@ export default function Booking(){
   async function submit(e){
     e.preventDefault();
     const token = localStorage.getItem('token');
-    if(!token){ alert('Login required to book'); nav('/login'); return; }
+    // allow guest booking if not logged in
+
     if(!fromDate || !toDate){ alert('Select dates'); return; }
     const d1 = new Date(fromDate), d2 = new Date(toDate);
     const nights = Math.ceil((d2 - d1)/(1000*60*60*24)) || 1;
@@ -80,6 +81,7 @@ export default function Booking(){
       </div>
 
       <form className="form" onSubmit={submit}>
+        <div className="small">You can book as a guest without logging in. To view your bookings later, please register / login.</div>
         <label className="label">From</label>
         <input type="date" className="input" value={fromDate} onChange={e=>setFromDate(e.target.value)} />
         <label className="label">Up to</label>
