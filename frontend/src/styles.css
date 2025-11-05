@@ -363,3 +363,130 @@ select.input {
         gap: 10px;
     }
 }
+
+/* --- Navigation Update --- */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    /* CHANGE: Darker, solid background for better visual weight */
+    background: #f1f5f9; /* Light gray/off-white */
+    backdrop-filter: none; /* Remove blur since it's solid */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #e2e8f0;
+}
+.nav a, .nav-link {
+    /* Ensure links look good on the new background */
+    color: #102a43;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+/* --- Update Large Footer Base --- */
+.large-footer {
+    /* Base color is less important now, setting it to white/light */
+    background: white; 
+    padding: 0;
+    margin-top: 48px;
+}
+
+/* --- Upper Footer Content (Menu Items) --- */
+.footer-content {
+    background: #f1f5f9; 
+    
+    display: grid;
+    /* Remove grid-template-columns here, move to inner container */
+    gap: 30px; 
+    
+    padding: 40px 0; /* Remove horizontal padding here */
+    border-bottom: 1px solid #e2e8f0; 
+    
+    /* REMOVE THESE LINES TO MAKE IT FULL WIDTH: */
+    /* max-width: 1100px; */
+    /* margin: 0 auto; */
+}
+.footer-col h4 {
+    /* CHANGE 2: Headers to Dark Gray */
+    color: #102a43; 
+    margin-top: 0;
+    font-size: 16px;
+}
+.footer-col a {
+    /* CHANGE 3: Links/Text to Dark Gray */
+    color: #475569; 
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 4px 0;
+    transition: color 0.2s;
+}
+.footer-col a:hover {
+    color: #0ea5a4; 
+}
+/* Ensure small text in column (like contact details) is readable */
+.footer-col .small {
+    /* CHANGE 4: Small contact text to Dark Gray */
+    color: #475569;
+}
+
+
+/* --- Lower Footer (Copyright Bar) --- */
+.footer-bottom {
+    background: #0ea5a4; 
+    /* FIX 1: Reduced vertical padding by 50% (from 20px to 10px) */
+    padding: 10px 0; 
+    /* Remove text-align: center; as we are using flexbox now */
+    max-width: 100%; /* Ensure it spans full width */
+}
+/* NEW/Modified CSS for the content inside footer-bottom */
+.footer-bottom .container {
+    /* FIX 2: Override the default .container behavior to use flexbox */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Ensure the max-width and horizontal padding are applied by .container */
+    padding: 0 16px;
+}
+
+/* Style for the new links */
+.footer-links a {
+    color: white; /* White text for visibility on teal */
+    text-decoration: none;
+    font-size: 13px; /* Match .small font size */
+    margin-left: 15px; /* Spacing between links */
+    transition: color 0.2s;
+}
+.footer-links a:hover {
+    color: #f1f5f9;
+}
+
+/* NEW: Inner content wrapper for content and alignment */
+.footer-inner-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 0 16px; /* Restore padding inside the container */
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* CHANGE 6: Copyright Text Color to White for Contrast on Teal background */
+.footer-bottom .small { 
+    color: white; 
+    font-weight: 500;
+}
+
+/* Responsive adjustment for footer */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 500px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}

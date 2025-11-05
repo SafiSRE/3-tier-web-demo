@@ -91,7 +91,7 @@ export default function Home(){
                   Clear Filters
               </button>
             </div>
-            <div className="small" style={{textAlign:'center', marginTop:10}}>Prices shown in INR • GST 18% applied</div>
+            <div className="small" style={{textAlign:'center', marginTop:10}}>*Prices shown are exclusive of 18% GST*</div>
           </div>
 
           {/* Results Panel */}
@@ -190,17 +190,76 @@ export default function Home(){
           </div>
         </div>
 
-        {/* Footer (unchanged) */}
-        <footer className="footer">
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap'}}>
-            <div>© {new Date().getFullYear()} Vista Homestays. All rights reserved.</div>
-            <div style={{display:'flex',gap:12}}>
-              <a href="/contact" className="small">Contact</a>
-              <a href="/support" className="small">Support</a>
-              <a href="#" className="small">Privacy Policy</a>
+{/* --- NEW FULL-WIDTH LARGE FOOTER --- */}
+<footer className="large-footer">
+
+    {/* Upper Footer Section: Spans full width, color is applied here */}
+    <div className="footer-content">
+        {/* Inner Grid: Constrains content to 1100px and holds the columns */}
+        <div className="footer-inner-grid">
+            
+            {/* Column 1: Brand Info - COLOR FIXED */}
+            <div className="footer-col">
+                <Link to="/" className="brand" style={{marginLeft:0}}>
+                    <h4 style={{color:'#102a43', fontSize:20}}>Vista Homestays</h4> 
+                </Link>
+                <p className="small" style={{color:'#475569', marginTop:10}}>
+                    Your trusted partner for personalized coastal escapes and private hosted stays.
+                </p>
             </div>
-          </div>
-        </footer>
+
+            {/* Column 2: Quick Links */}
+            <div className="footer-col">
+                <h4>Discover</h4>
+                <Link to="/">Featured Stays</Link>
+                <a href="#browse">Search by Location</a>
+                <Link to="/contact">Host a Property</Link>
+                <Link to="/my-bookings">My Bookings</Link>
+            </div>
+
+            {/* Column 3: Help & Support */}
+            <div className="footer-col">
+                <h4>Support</h4>
+                <Link to="/support">FAQ / Help Center</Link>
+                <Link to="/contact">Contact Support</Link>
+                <a href="#">Cancellation Policy</a>
+            </div>
+
+            {/* Column 4: Contact */}
+            <div className="footer-col">
+                <h4>Contact</h4>
+                <div className="small" style={{color:'#475569'}}>
+                    Email: support@vistahomestays.example
+                </div>
+                <div className="small" style={{color:'#475569', marginTop:10}}>
+                    Phone: +91-98765-43210
+                </div>
+                <div className="small" style={{color:'#475569', marginTop:10}}>
+                    Follow Us: (Facebook, Instagram, Threads, Twitter, Youtube)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {/* Lower Footer Section: Spans full width, color is applied here */}
+    <div className="footer-bottom">
+        {/* Inner Content: Constrains width, uses flex to split content */}
+        <div className="container"> 
+            {/* Left Side: Copyright */}
+            <span className="small" style={{ color: 'white' }}>
+                © {new Date().getFullYear()} Vista Homestays. All rights reserved.
+            </span>
+            
+            {/* Right Side: Links */}
+            <div className="footer-links">
+                {/* These links use the new CSS styles defined above */}
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+        </div>
+    </div>
+</footer>
+{/* --- END NEW FULL-WIDTH LARGE FOOTER --- */}
       </div>
     </>
   )
