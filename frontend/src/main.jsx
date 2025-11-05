@@ -1,3 +1,4 @@
+// frontend/src/main.jsx
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
@@ -6,6 +7,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Booking from './pages/Booking'
 import MyBookings from './pages/MyBookings'
+import Contact from './pages/Contact'
+import Support from './pages/Support'
 import './styles.css'
 
 function AccountMenu(){
@@ -32,7 +35,6 @@ function AccountMenu(){
   function doLogout(){
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    // navigate to home
     window.location = '/';
   }
 
@@ -56,10 +58,12 @@ function App(){
     <BrowserRouter>
       <nav className="nav">
         <Link to="/" className="brand">
-          <img src="/assets/logo.svg" alt="Vista" className="logo" />
+          <img src="/assets/logo.svg" alt="Vista Homestays" className="logo" />
         </Link>
         <div className="nav-right">
           <Link to="/" className="nav-link">Home</Link>
+          <Link to="/contact" className="nav-link">Contact</Link>
+          <Link to="/support" className="nav-link">Support</Link>
           <AccountMenu />
         </div>
       </nav>
@@ -70,6 +74,8 @@ function App(){
         <Route path="/register" element={<Register />} />
         <Route path="/book/:id" element={<Booking />} />
         <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     </BrowserRouter>
   )
