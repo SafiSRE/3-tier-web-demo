@@ -1,4 +1,4 @@
-// frontend/src/pages/MyBookings.jsx
+// frontend/src/pages/MyBookings.jsx - ENHANCED
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ export default function MyBookings() {
         }
         if (!res.ok) {
           const txt = await res.text().catch(() => "");
-          throw new Error(txt || `HTTP ${res.status}`);
+          throw new Error(txt || `HTTP ₹{res.status}`);
         }
         return res.json();
       })
@@ -47,31 +47,56 @@ export default function MyBookings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading) return <div className="container"><div className="form">Loading your bookings…</div></div>;
-  if (error) return <div className="container"><div className="form" style={{color:'crimson'}}>{error}</div></div>;
+  if (loading) return (
+    <div className="container" style={{padding:'40px', textAlign:'center'}}>
+        <div className="form">Loading your bookings...</div>
+    </div>
+  );
+  if (error) return (
+    <div className="container" style={{padding:'40px', textAlign:'center'}}>
+        <div className="form" style={{color:'#dc2626', background:'#fee2e2', border:'1px solid #fca5a5'}}>
+            Error: {error}
+        </div>
+    </div>
+  );
 
   return (
     <div className="container" style={{ maxWidth: 900 }}>
-      <h2>My Bookings</h2>
+      <h2>My Bookings ({bookings.length})</h2>
 
       <div className="booking-list">
-        {bookings.length === 0 && <div className="form">No bookings yet.</div>}
+        {bookings.length === 0 && <div className="form" style={{textAlign:'center', padding:'30px'}}>You have no active bookings yet.</div>}
 
         {bookings.map((b) => (
-          <div key={b._id} className="form">
-            <div style={{ display: "flex", gap: 12 }}>
+          <div key={b._id} className="form" style={{ padding: 16 }}> {/* form class used as card */}
+            <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+              {/* Media on the left */}
               <img
                 src={(b.homestay && b.homestay.images && b.homestay.images[0]) || "/assets/placeholder.jpg"}
                 alt={b.homestay ? b.homestay.name : "Homestay"}
-                style={{ width: 140, height: 90, objectFit: "cover", borderRadius: 8 }}
+                style={{ width: 160, height: 100, objectFit: "cover", borderRadius: 8 }}
               />
+              
+              {/* Content in the middle */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 800 }}>{b.homestay ? b.homestay.name : "Unknown Homestay"}</div>
-                <div className="small">
-                  From: {b.fromDate ? new Date(b.fromDate).toLocaleDateString() : "—"} To: {b.toDate ? new Date(b.toDate).toLocaleDateString() : "—"}
+                <div style={{ fontWeight: 800, fontSize: 18, color: '#0ea5a4' }}>
+                    {b.homestay ? b.homestay.name : "Unknown Homestay"}
                 </div>
-                <div className="small">Nights: {b.nights || "—"} | Total: ${b.totalPrice || "—"}</div>
-                <div className="small">Booked by: {b.name || "—"} | Phone: {b.phone || "—"}</div>
+                <div className="small" style={{marginTop: 4}}>
+                  From: <span style={{fontWeight:600}}>{b.fromDate ? new Date(b.fromDate).toLocaleDateString() : "—"}</span> 
+                  {' '}To: <span style={{fontWeight:600}}>{b.toDate ? new Date(b.toDate).toLocaleDateString() : "—"}</span>
+                </div>
+                <div className="small">
+                    Nights: <span style={{fontWeight:600}}>{b.nights || "—"}</span> | 
+                    Total: <span style={{fontWeight:800, color:'#ef4444'}}>₹{b.totalPrice || "—"}</span>
+                </div>
+              </div>
+
+              {/* Guest info on the right */}
+              <div style={{textAlign: 'right'}}>
+                <div style={{fontWeight: 600}}>Guest Details</div>
+                <div className="small">Booked by: {b.name || "—"}</div>
+                <div className="small">Phone: {b.phone || "—"}</div>
               </div>
             </div>
           </div>
