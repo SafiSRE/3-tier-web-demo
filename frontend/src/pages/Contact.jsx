@@ -1,17 +1,30 @@
 // frontend/src/pages/Contact.jsx
 import React, { useState } from 'react';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function Contact(){
   const [name,setName]=useState('');
   const [email,setEmail]=useState('');
   const [msg,setMsg]=useState('');
   const [sent,setSent]=useState(false);
+  const [error,setError]=useState(null);
 
-  function submit(e){
+  async function submit(e){
     e.preventDefault();
-    // frontend-only placeholder: you can wire to backend/email later
-    setSent(true);
-    setName(''); setEmail(''); setMsg('');
+    setError(null);
+    try {
+      const res = await fetch(API + '/contact', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ name, email, message: msg })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed');
+      setSent(true);
+      setName(''); setEmail(''); setMsg('');
+    } catch (err) {
+      setError(err.message || 'Network error');
+    }
   }
 
   return (
@@ -21,6 +34,7 @@ export default function Contact(){
         <div style={{flex:1}}>
           <p>Have a question about a booking or need help? Send us a message and our team will respond within 24 hours.</p>
           {sent && <div style={{color:'green',marginBottom:8}}>Message sent — we will get back to you soon!</div>}
+          {error && <div style={{color:'crimson',marginBottom:8}}>{error}</div>}
           <form onSubmit={submit}>
             <label className="label">Name</label>
             <input className="input" value={name} onChange={e=>setName(e.target.value)} required />
@@ -37,7 +51,7 @@ export default function Contact(){
           <div className="form">
             <h4>Support</h4>
             <div className="small">Email: support@vistahomestays.example</div>
-            <div className="small" style={{marginTop:8}}>Phone: +1-555-555-5555</div>
+            <div className="small" style={{marginTop:8}}>Phone: +91-98765-43210</div>
             <div className="small" style={{marginTop:8}}>Hours: Mon–Sat 09:00–18:00</div>
           </div>
         </div>

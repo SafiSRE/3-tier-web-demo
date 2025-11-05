@@ -67,3 +67,7 @@ body{margin:0;color:#102a43;background:#f8fafc}
   .card-media img{height:180px}
   .logo{height:48px}
 }
+
+.testimonial-card{background:white;border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(2,6,23,0.06);max-width:720px}
+.small{font-size:13px;color:#334e68}
+
