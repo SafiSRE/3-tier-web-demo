@@ -1,0 +1,2 @@
+### Add all files/folders related to Node.js projects to .gitignore
+node_modules/
