@@ -93,7 +93,7 @@ export default function Booking(){
         <form className="booking-form-panel form" onSubmit={submit}>
           <div className="small" style={{marginBottom:16}}>
             {token 
-              ? `You are logged in as ₹{JSON.parse(localStorage.getItem('user')).name}.`
+              ? `You are logged in as ${JSON.parse(localStorage.getItem('user')).name}.`
               : 'You can book as a guest. To view your bookings later, please register/login.'
             }
           </div>
