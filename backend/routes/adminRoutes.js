@@ -36,24 +36,23 @@ function adminAuthMiddleware(req, res, next) {
 
 // GET: Retrieve all homestays (Approved and Unapproved)
 router.get('/homestays', adminAuthMiddleware, async (req, res) => {
-    // Populate the owner field to show owner name and contact
-    const listings = await Homestay.find().populate('owner', 'name email');
-    res.json(listings);
-});
-
-// PUT: Approve/Reject a homestay listing
-router.put('/homestays/:id/status', adminAuthMiddleware, async (req, res) => {
-    const { isApproved } = req.body;
     try {
-      const homestay = await Homestay.findByIdAndUpdate(
-          req.params.id, 
-          { isApproved: isApproved }, 
-          { new: true }
-      );
-      if (!homestay) return res.status(404).json({ error: 'Homestay not found' });
-      res.json(homestay);
-    } catch(err) {
-      res.status(500).json({ error: 'Server error updating status' });
+        // Fetch all listings and attempt to populate the owner.
+        let listings = await Homestay.find()
+            .populate('owner', 'name email')
+            .exec(); // Execute the query
+
+        // CRITICAL SANITIZATION STEP: Filter out any listings where the owner population failed (owner === null)
+        // This prevents the frontend from crashing if the owner ID is invalid/deleted.
+        listings = listings.filter(l => l.owner !== null);
+
+        res.json(listings);
+    } catch (err) {
+        // This catch block prevents the entire Node server from crashing due to a Mongoose error.
+        console.error('Admin Homestay Fetch/Populate Error:', err);
+        
+        // Respond with 500 status and a specific error message to the frontend.
+        res.status(500).json({ error: 'Failed to fetch listings due to a backend database error. See server logs for details.' });
     }
 });
 
