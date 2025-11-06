@@ -2,12 +2,14 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        VITE_API_URL: http://20.215.244.118:5000/api
     ports:
     - 3000:80
     depends_on:
     - backend
     environment:
-      VITE_API_URL: http://localhost:5000/api
+      VITE_API_URL: http://20.215.244.118:5000/api
   backend:
     build:
       context: ./backend

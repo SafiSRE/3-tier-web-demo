@@ -95,20 +95,20 @@ router.post('/owner/login', async (req, res) => {
   }
 });
 
-//router.post('/admin/setup', async (req, res) => {
-//  try {
-//    const { name, email, password } = req.body;
-//    // Check if admin already exists
-//    const existing = await User.findOne({ email });
-//    if(existing) return res.status(400).json({error: 'Admin user exists. Use login.'});
+router.post('/admin/setup', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    // Check if admin already exists
+    const existing = await User.findOne({ email });
+    if(existing) return res.status(400).json({error: 'Admin user exists. Use login.'});
 
-//    const passwordHash = await bcrypt.hash(password, 10);
-//    // Create user with 'admin' role
-//    const user = await User.create({ name, email, passwordHash, role: 'admin' }); 
-//    res.json({ success: true, message: 'Admin setup successful. Restart your server.' });
-//  } catch (err) {
-//    res.status(500).json({error: 'Server error'});
-//  }
-//});
+    const passwordHash = await bcrypt.hash(password, 10);
+    // Create user with 'admin' role
+    const user = await User.create({ name, email, passwordHash, role: 'admin' }); 
+    res.json({ success: true, message: 'Admin setup successful. Restart your server.' });
+  } catch (err) {
+    res.status(500).json({error: 'Server error'});
+  }
+});
 
 export default router;

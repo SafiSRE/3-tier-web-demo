@@ -2,6 +2,8 @@
 FROM node:18 AS build
 WORKDIR /app
 COPY package*.json ./
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 # Install dev deps so vite is available for build
 RUN npm install --silent
 COPY . .
