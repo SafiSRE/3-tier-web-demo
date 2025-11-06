@@ -37,26 +37,31 @@ function adminAuthMiddleware(req, res, next) {
 // GET: Retrieve all homestays (Approved and Unapproved)
 router.get('/homestays', adminAuthMiddleware, async (req, res) => {
     try {
-        // Use a configuration object for populate for enhanced resilience
+        // Use the populate method with strict options for resilience
         let listings = await Homestay.find()
             .populate({
                 path: 'owner',
                 select: 'name email',
-                // CRITICAL FIX: Stops the server from crashing if a reference ID is invalid
+                // CRITICAL: Prevent server crash if a Homestay ID refers to a deleted User ID
                 options: { strictPopulate: false } 
             })
             .exec(); 
 
-        // Sanitize the list to remove entries where population failed (owner is null)
+        // Sanitize the list: Filter out any entries where the owner field is null 
+        // (meaning the user ID link was invalid/deleted)
         listings = listings.filter(l => l.owner !== null);
 
-        res.json(listings);
+        // Check if any listings exist. If so, send them.
+        if (listings.length > 0 || listings.length === 0) {
+            return res.json(listings);
+        }
+
     } catch (err) {
-        // This catch block prevents the entire Node server from crashing due to any Mongoose error.
-        console.error('Admin Homestay Fetch/Populate Error (Final Check):', err);
+        // This catch block executes if Mongoose throws an error (e.g., query syntax or schema error).
+        console.error('Admin Homestay Fetch/Populate Critical Error:', err);
         
-        // Respond with 500 status and a specific error message to the frontend.
-        res.status(500).json({ error: 'Failed to fetch listings due to a backend database error. Please verify the Homestay schema and seeded data.' });
+        // Respond with a specific 500 error to the frontend
+        return res.status(500).json({ error: 'Database query failed on the server. Check backend logs for schema or syntax errors.' });
     }
 });
 
