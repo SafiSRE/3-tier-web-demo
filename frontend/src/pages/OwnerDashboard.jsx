@@ -1,4 +1,5 @@
-// frontend/src/pages/OwnerDashboard.jsx (NEW FILE)
+// frontend/src/pages/OwnerDashboard.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 

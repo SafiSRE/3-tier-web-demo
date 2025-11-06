@@ -1,9 +1,8 @@
-// frontend/src/main.jsx - ENHANCED FOR OWNER PORTAL
+// frontend/src/main.jsx - FINAL NAVIGATION UPDATE
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-// ... existing imports ...
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -11,11 +10,10 @@ import Booking from './pages/Booking'
 import MyBookings from './pages/MyBookings'
 import Contact from './pages/Contact'
 import Support from './pages/Support'
-// --- NEW OWNER IMPORTS ---
-import OwnerLogin from './pages/OwnerLogin' // New
-import OwnerDashboard from './pages/OwnerDashboard' // New
-import CreateHomestay from './pages/CreateHomestay' // New
-
+import OwnerLogin from './pages/OwnerLogin' 
+import OwnerDashboard from './pages/OwnerDashboard' 
+import CreateHomestay from './pages/CreateHomestay'
+import ListHomestayRequest from './pages/ListHomestayRequest'; // You added this last
 import './styles.css'
 
 function AccountMenu(){
@@ -26,7 +24,6 @@ function AccountMenu(){
   const isCustomer = user && user.role === 'customer';
 
   React.useEffect(() => {
-    // ... existing handleClickOutside logic ...
     function handleClickOutside(e){
       const el = document.getElementById('account-dropdown-root');
       if(!el) return;
@@ -39,11 +36,19 @@ function AccountMenu(){
   }, []);
 
   if(!token){
+    // FIX: Combined Login Dropdown for both Customer and Homeowner
     return (
-        <div style={{display:'flex', gap:10}}>
-            <Link to="/login" className="nav-link">Login</Link>
-            <Link to="/owner/login" className="nav-link small">Host Login</Link>
-        </div>
+      <div id="account-dropdown-root" style={{position:'relative', display:'inline-block'}}>
+        <button className="btn account-btn" onClick={(e)=>{e.stopPropagation(); setOpen(!open)}} style={{background:'#102a43'}}>
+          Login
+        </button>
+        {open && (
+          <div className="dropdown-menu">
+            <Link className="dropdown-item" to="/login">Login (Customer)</Link>
+            <Link className="dropdown-item" to="/owner/login">Homeowner Login</Link>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -72,15 +77,17 @@ function AccountMenu(){
 function App(){
   return (
     <BrowserRouter>
-      {/* Navigation Bar (unchanged) */}
       <nav className="nav">
         <Link to="/" className="brand">
           <img src="/assets/logo.svg" alt="Vista Homestays" className="logo" />
         </Link>
         <div className="nav-right">
+          {/* FIX: New Menu Order and Text */}
           <Link to="/" className="nav-link">Home</Link>
-          {/* New link to owner section */}
-          <Link to="/owner/dashboard" className="nav-link">Host</Link> 
+          {/* OLD */}
+          {/*<Link to="/owner/login" className="nav-link">List Your Property</Link> {/* Link acts as gateway */}
+          {/* NEW: */}
+          <Link to="/list-homestay-request" className="nav-link">List Your Homestay</Link>
           <Link to="/contact" className="nav-link">Contact</Link>
           <Link to="/support" className="nav-link">Support</Link>
           <AccountMenu />
@@ -88,7 +95,6 @@ function App(){
       </nav>
 
       <Routes>
-        {/* Customer Routes (Existing) */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -96,13 +102,15 @@ function App(){
         <Route path="/my-bookings" element={<MyBookings />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/list-homestay-request" element={<ListHomestayRequest />} />
         
-        {/* --- NEW OWNER PORTAL ROUTES --- */}
+        {/* OWNER PORTAL ROUTES */}
         <Route path="/owner/login" element={<OwnerLogin />} />
         <Route path="/owner/register" element={<OwnerLogin register={true} />} />
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/create-listing" element={<CreateHomestay />} />
-        <Route path="/owner/edit/:id" element={<CreateHomestay />} /> {/* Re-use Create component */}
+        <Route path="/owner/edit/:id" element={<CreateHomestay />} />
+        <Route path="/owner/login" element={<OwnerLogin />} />
       </Routes>
     </BrowserRouter>
   )

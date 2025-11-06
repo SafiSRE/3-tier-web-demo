@@ -1,18 +1,19 @@
-// frontend/src/pages/CreateHomestay.jsx (NEW FILE)
+// frontend/src/pages/CreateHomestay.jsx
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function CreateHomestay() {
-  const { id } = useParams(); // Used for editing
+  const { id } = useParams(); 
   const isEditing = !!id;
   const nav = useNavigate();
   
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [pricePerNight, setPricePerNight] = useState('');
-  const [images, setImages] = useState(''); // Stores comma-separated URLs
+  const [images, setImages] = useState(''); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchError, setFetchError] = useState(null);

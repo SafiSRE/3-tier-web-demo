@@ -264,8 +264,9 @@ export default function Home(){
             <div className="footer-col">
                 <h4>Support</h4>
                 <Link to="/support">FAQ / Help Center</Link>
-                <Link to="/contact">Contact Support</Link>
-                <a href="#">Cancellation Policy</a>
+                <Link to="/contact">Customer Support</Link>
+                <Link to="/contact">Homeowner Support</Link>
+                <Link to="/contact">Partner Support</Link>
             </div>
 
             {/* Column 4: Contact */}
@@ -297,6 +298,8 @@ export default function Home(){
             <div className="footer-links">
                 {/* These links use the new CSS styles defined above */}
                 <a href="#">Privacy Policy</a>
+                <a href="#">Partner Policy</a>
+                <a href="#">Cancellation Policy</a>
                 <a href="#">Terms & Conditions</a>
             </div>
         </div>
