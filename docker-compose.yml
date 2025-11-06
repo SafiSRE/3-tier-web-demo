@@ -17,6 +17,16 @@ services:
     - MONGO_URI=mongodb://mongo:27017/vista
     - JWT_SECRET=supersecretkey
     - NODE_ENV=development
+    #deploy:
+    #  resources:
+    #    limits:
+    #      # Set a limit (soft cap)
+    #     cpus: '2.0' # 2 full CPU cores
+    #      memory: 2048M # 2048 Megabytes of RAM
+    #    reservations:
+    #      # Guarantee a minimum reservation
+    #      cpus: '1.0' # Reserve 1 full CPU cores
+    #      memory: 1024M # Reserve 128 Megabytes of RAM
     depends_on:
     - mongo
     volumes:

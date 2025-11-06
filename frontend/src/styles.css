@@ -507,3 +507,22 @@ select.input {
         grid-template-columns: 1fr;
     }
 }
+
+/* Custom style for menu links to look less like a strong button, similar to the 'Details' ghost button */
+.nav-link-ghost {
+    color: #102a43; /* Dark text */
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.nav-link-ghost:hover {
+    background: #e2e8f0; /* Light hover background */
+    color: #0ea5a4;
+}
+/* Ensure the account-btn uses the primary style */
+.account-btn {
+    background: #0ea5a4; /* Teal color */
+    /* ... rest of existing styles ... */
+}

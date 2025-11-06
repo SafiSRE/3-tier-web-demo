@@ -1,4 +1,4 @@
-// backend/models/User.js - ENHANCED
+// backend/models/User.js - FINAL ENHANCED (Admin Role Added)
 
 import mongoose from 'mongoose';
 
@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   passwordHash: String,
-  // NEW FIELD: 'customer' or 'owner'
-  role: { type: String, enum: ['customer', 'owner'], default: 'customer' } 
+  // NEW ENUM VALUE: 'admin'
+  role: { type: String, enum: ['customer', 'owner', 'admin'], default: 'customer' } 
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

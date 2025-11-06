@@ -1,4 +1,4 @@
-// frontend/src/main.jsx - FINAL NAVIGATION UPDATE
+// frontend/src/main.jsx - VERIFIED FINAL VERSION
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
@@ -9,11 +9,15 @@ import Register from './pages/Register'
 import Booking from './pages/Booking'
 import MyBookings from './pages/MyBookings'
 import Contact from './pages/Contact'
-import Support from './pages/Support'
+import Support from './pages/Support' 
 import OwnerLogin from './pages/OwnerLogin' 
 import OwnerDashboard from './pages/OwnerDashboard' 
-import CreateHomestay from './pages/CreateHomestay'
-import ListHomestayRequest from './pages/ListHomestayRequest'; // You added this last
+import CreateHomestay from './pages/CreateHomestay' 
+import ListHomestayRequest from './pages/ListHomestayRequest'; 
+import AdminLogin from './pages/AdminLogin' // CRITICAL NEW IMPORT
+import AdminDashboard from './pages/AdminDashboard' // CRITICAL NEW IMPORT
+import SupportAdmin from './pages/SupportAdmin' // CRITICAL NEW IMPORT
+
 import './styles.css'
 
 function AccountMenu(){
@@ -22,6 +26,7 @@ function AccountMenu(){
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   const isOwner = user && user.role === 'owner';
   const isCustomer = user && user.role === 'customer';
+  const isAdmin = user && user.role === 'admin'; // Check for admin role
 
   React.useEffect(() => {
     function handleClickOutside(e){
@@ -36,10 +41,9 @@ function AccountMenu(){
   }, []);
 
   if(!token){
-    // FIX: Combined Login Dropdown for both Customer and Homeowner
     return (
       <div id="account-dropdown-root" style={{position:'relative', display:'inline-block'}}>
-        <button className="btn account-btn" onClick={(e)=>{e.stopPropagation(); setOpen(!open)}} style={{background:'#102a43'}}>
+        <button className="btn account-btn" onClick={(e)=>{e.stopPropagation(); setOpen(!open)}}>
           Login
         </button>
         {open && (
@@ -61,12 +65,13 @@ function AccountMenu(){
   return (
     <div id="account-dropdown-root" style={{position:'relative', display:'inline-block'}}>
       <button className="btn account-btn" onClick={(e)=>{e.stopPropagation(); setOpen(!open)}}>
-        {user && user.name ? user.name : 'Account'} ({isOwner ? 'Owner' : 'Guest'})
+        {user && user.name ? user.name : 'Account'} ({isAdmin ? 'Admin' : (isOwner ? 'Owner' : 'Guest')})
       </button>
       {open && (
         <div className="dropdown-menu">
             {isCustomer && <Link className="dropdown-item" to="/my-bookings">My Bookings</Link>}
             {isOwner && <Link className="dropdown-item" to="/owner/dashboard">Owner Dashboard</Link>}
+            {isAdmin && <Link className="dropdown-item" to="/admin/dashboard">Admin Dashboard</Link>}
             <button className="dropdown-item" onClick={doLogout}>Logout</button>
         </div>
       )}
@@ -82,14 +87,9 @@ function App(){
           <img src="/assets/logo.svg" alt="Vista Homestays" className="logo" />
         </Link>
         <div className="nav-right">
-          {/* FIX: New Menu Order and Text */}
           <Link to="/" className="nav-link">Home</Link>
-          {/* OLD */}
-          {/*<Link to="/owner/login" className="nav-link">List Your Property</Link> {/* Link acts as gateway */}
-          {/* NEW: */}
-          <Link to="/list-homestay-request" className="nav-link">List Your Homestay</Link>
-          <Link to="/contact" className="nav-link">Contact</Link>
-          <Link to="/support" className="nav-link">Support</Link>
+          <Link to="/list-homestay-request" className="nav-link nav-link-ghost">List Your Homestay</Link> 
+          <Link to="/contact" className="nav-link nav-link-ghost">Contact</Link>
           <AccountMenu />
         </div>
       </nav>
@@ -110,7 +110,11 @@ function App(){
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/create-listing" element={<CreateHomestay />} />
         <Route path="/owner/edit/:id" element={<CreateHomestay />} />
-        <Route path="/owner/login" element={<OwnerLogin />} />
+        
+        {/* ADMIN PORTAL ROUTES */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/support" element={<SupportAdmin />} />
       </Routes>
     </BrowserRouter>
   )

@@ -166,15 +166,17 @@ export default function ListHomestayRequest() {
                 </div>
 
                 <div style={{ marginTop: 25, textAlign: 'center' }}>
-                    <button className="btn" type="submit" disabled={loading} style={{ 
-                        background: '#102a43', // Use a solid dark color for the final CTA
+                    <button className="btn btn-cta" type="submit" disabled={loading} style={{ 
+                        /* FIX: Changed color to primary teal for final submission CTA */
+                        background: '#0ea5a4', 
                         color: 'white', 
                         padding: '12px 30px', 
                         fontSize: '16px',
                         fontWeight: 700,
                         width: '50%'
                     }}>
-                        {loading ? 'Sending Request...' : 'Send a Request'}
+                        {/* FIX: New Button Text */}
+                        {loading ? 'Submitting...' : 'Submit Your Homestay'} 
                     </button>
                 </div>
             </form>

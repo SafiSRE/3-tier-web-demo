@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import homestayRoutes from "./routes/homestayRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js"; // NEW import
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/homestays", homestayRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/admin", adminRoutes); // NEW: Register Admin Routes
 
 app.get("/", (req, res) => res.send({status: "Vista Homestays API"}));
 
