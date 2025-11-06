@@ -5,6 +5,20 @@ import { Link } from 'react-router-dom'
 import TestimonialCarousel from '../components/TestimonialCarousel'
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+// --- NEW Hero Images Array ---
+const heroImages = [
+    '/assets/hero_1.jpg',
+    '/assets/hero_2.jpg', // You must add this image
+    '/assets/hero_3.jpg', // You must add this image
+    '/assets/hero_4.jpg',       // You must add this image
+    '/assets/hero_5.jpg',       // You must add this image
+    '/assets/hero_6.jpg',       // You must add this image
+    //'/assets/hero_7.jpg',       // You must add this image
+    //'/assets/hero_8.jpg',       // You must add this image
+    //'/assets/hero_9.jpg',       // You must add this image
+    //'/assets/hero_10.jpg',       // You must add this image
+];
+
 // Simple SVG icons (unchanged)
 function AmenityIcon({ type }) {
   if (type === 'wifi') return <svg width="16" height="16" viewBox="0 0 24 24" style={{display:'inline-block',verticalAlign:'middle'}}><path fill="currentColor" d="M12 18c.8 0 1.5-.7 1.5-1.5S12.8 15 12 15s-1.5.7-1.5 1.5S11.2 18 12 18zm-4-3.2a6 6 0 018 0l1.3-1.3a8 8 0 00-10.6 0L8 14.8zm-2.8-2.8a10 10 0 0115.6 0L22 10.2a12 12 0 00-18 0L5.2 12z"/></svg>
@@ -17,11 +31,27 @@ function StarIcon({ filled }) {
 }
 
 export default function Home(){
+
+    // --- NEW Hero Slider State and Logic ---
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const sliderInterval = setInterval(() => {
+      setCurrentImageIndex(prevIndex => 
+        (prevIndex + 1) % heroImages.length
+      );
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(sliderInterval);
+  }, []);
+  // --- END Hero Slider Logic ---
+
   const [homestays, setHomestays] = useState([]);
   const [q, setQ] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [sortOrder, setSortOrder] = useState(''); 
+  const [sortOrder, setSortOrder] = useState('');
+
 
   useEffect(()=> {
     fetch(API + '/homestays')
@@ -56,20 +86,33 @@ export default function Home(){
 
   return (
     <>
-      {/* Hero Section (unchanged) */}
-      <section className="hero" style={{backgroundImage:`url('/assets/hero_beach.jpg')`}}>
-        <div className="hero-overlay"></div>
-        <div className="hero-inner container">
-          <div className="hero-left">
-            <h1 className="hero-title">Discover Coastal Escapes</h1>
-            <p className="hero-sub">Handpicked homestays and private hosts with easy, trusted booking.</p>
-            <div style={{marginTop:20}}>
-              <a className="btn btn-cta" href="#browse">Start Browsing</a>
-              <Link className="btn btn-ghost" to="/contact" style={{marginLeft:16}}>Contact Us</Link>
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* --- UPDATED Hero Section --- */}
+          <section className="hero">
+            {/* NEW: Iterate over images, apply active class and inline style for transition */}
+            {heroImages.map((image, index) => (
+                <div
+                    key={index}
+                    className={`hero-slide ${index === currentImageIndex ? 'active' : ''}`}
+                    style={{ 
+                        backgroundImage: `url(${image})`, 
+                        opacity: index === currentImageIndex ? 1 : 0 
+                    }}
+                />
+            ))}
+
+            <div className="hero-overlay"></div>
+            <div className="hero-inner container">
+              <div className="hero-left">
+                <h1 className="hero-title">Discover Coastal Escapes</h1>
+                <p className="hero-sub">Handpicked homestays and private hosts with easy, trusted booking.</p>
+                <div style={{marginTop:20}}>
+                  <a className="btn btn-cta" href="#browse">Start Browsing</a>
+                  <Link className="btn btn-ghost" to="/contact" style={{marginLeft:16}}>Contact Us</Link>
+                </div>
+              </div>
+            </div>
+          </section>
+          {/* --- END UPDATED Hero Section --- */}
 
       <div className="container" id="browse">
         <div className="main-content-layout">

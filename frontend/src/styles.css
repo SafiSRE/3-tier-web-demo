@@ -177,28 +177,45 @@ select.input {
 }
 
 /* Hero Section */
+/* Base Hero Styling (Modified) */
 .hero {
-    height: 440px;
-    background-size: cover;
-    background-position: center;
+    height: 440px; 
     position: relative;
-    border-bottom: 1px solid rgba(2, 6, 23, 0.04);
+    /* REMOVE: background-image and background-position from .hero, as it's now on the slides */
+    overflow: hidden; /* Crucial to contain the absolute slides */
 }
-.hero-overlay {
+/* New Slide Styling */
+.hero-slide {
     position: absolute;
-    left: 0;
-    right: 0;
     top: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(4, 12, 20, 0.35), rgba(4, 12, 20, 0.15)); /* Darker gradient */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* FIX: Explicitly enforce 'cover' to ensure it scales as large as possible */
+    background-size: cover; 
+    
+    /* Ensure the image remains centered when cropped (common best practice) */
+    background-position: center; 
+    
+    transition: opacity 1.5s ease-in-out; 
+    opacity: 0; 
+    z-index: 1;
+}
+
+/* Active Slide (unchanged) */
+.hero-slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+/* Ensure Overlay and Text are on Top */
+.hero-overlay {
+    z-index: 3; /* Must be above the slides */
+    /* ... existing styles ... */
 }
 .hero-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    padding: 28px;
-    position: relative; /* Keep content above overlay */
+    z-index: 4; /* Must be above the overlay and slides */
+    /* ... existing styles ... */
 }
 .hero-left {
     max-width: 640px;
