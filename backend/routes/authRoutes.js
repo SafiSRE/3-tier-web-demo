@@ -95,7 +95,6 @@ router.post('/owner/login', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // NEW: Admin login endpoint (Dedicated route for 'admin' role)
 router.post('/admin/login', async (req, res) => {
   try {
@@ -128,15 +127,6 @@ router.post('/admin/setup', async (req, res) => {
     const existing = await User.findOne({ email });
     if(existing) return res.status(400).json({error: 'Admin user exists. Use login.'});
 
-=======
-router.post('/admin/setup', async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    // Check if admin already exists
-    const existing = await User.findOne({ email });
-    if(existing) return res.status(400).json({error: 'Admin user exists. Use login.'});
-
->>>>>>> c156d82bcdf78d27410c23088a2b3a785816102c
     const passwordHash = await bcrypt.hash(password, 10);
     // Create user with 'admin' role
     const user = await User.create({ name, email, passwordHash, role: 'admin' }); 
