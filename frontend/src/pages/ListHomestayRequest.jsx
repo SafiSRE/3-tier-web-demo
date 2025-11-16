@@ -1,11 +1,20 @@
-// frontend/src/pages/ListHomestayRequest.jsx (NEW FILE)
+// frontend/src/pages/ListHomestayRequest.jsx - REVISED WITH CONTACT.JSX CAPTCHA
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// This component is the public form for requesting a homestay listing.
+// --- CAPTCHA Logic (Copied from Contact.jsx) ---
+function generateCaptcha() {
+    // Generates a simple addition problem
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 5) + 1;
+    const question = `What is ${num1} + ${num2}?`;
+    const answer = num1 + num2;
+    return { question, answer };
+}
+
 export default function ListHomestayRequest() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -17,28 +26,48 @@ export default function ListHomestayRequest() {
     const [hearAbout, setHearAbout] = useState('');
     const [photoLink, setPhotoLink] = useState('');
     const [description, setDescription] = useState('');
-    const [files, setFiles] = useState(null); // For file uploads
-    const [status, setStatus] = useState(null); // 'success' or 'error'
+    const [files, setFiles] = useState(null); 
+    const [status, setStatus] = useState(null); // 'success' or 'error' (submission status)
     const [loading, setLoading] = useState(false);
     
+    // NEW: Error state for immediate feedback (like CAPTCHA failure)
+    const [error, setError] = useState(null); 
+
+    // NEW CAPTCHA states (Copied from Contact.jsx)
+    const [captcha, setCaptcha] = useState(generateCaptcha());
+    const [captchaInput, setCaptchaInput] = useState('');
+    
     const nav = useNavigate();
+
+    // Refresh CAPTCHA on load/reset
+    useEffect(() => {
+        setCaptcha(generateCaptcha());
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus(null);
+        setError(null); // Clear previous errors
+
+        // --- CAPTCHA VALIDATION (Copied from Contact.jsx) ---
+        if (Number(captchaInput) !== captcha.answer) {
+            setError('Incorrect CAPTCHA answer. Please try again.');
+            setCaptcha(generateCaptcha()); // Regenerate question
+            setCaptchaInput('');
+            return; 
+        }
+        // --- END CAPTCHA VALIDATION ---
+
         setLoading(true);
 
         const payload = {
             ownerName: `${firstName} ${lastName}`,
             email, phone, location, propertyType, rooms,
             source: hearAbout, photoLink, description,
-            // Mocking file upload indication for backend review
             hasFiles: files ? files.length : 0 
         };
 
         try {
-            // Note: This needs a new backend endpoint (e.g., /api/listing-requests)
-            // For now, we'll send it to the existing contact endpoint structure, as the logic is similar (save data, no auth).
             const res = await fetch(API + '/contact', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -56,12 +85,14 @@ export default function ListHomestayRequest() {
             // Clear all fields on successful submission
             setFirstName(''); setLastName(''); setEmail(''); setPhone(''); setLocation('');
             setPropertyType(''); setRooms(''); setHearAbout(''); setPhotoLink(''); setDescription(''); setFiles(null);
+            setCaptcha(generateCaptcha()); // Regenerate CAPTCHA on successful send
+            setCaptchaInput('');
             
             setTimeout(() => { nav('/'); }, 3000);
 
         } catch (err) {
-            setStatus('error');
-            console.error(err);
+            setStatus('error'); // Set status for the persistent success/error message box
+            setError(err.message || 'Network error occurred. Please try again.'); // Set error state for debug/display
         } finally {
             setLoading(false);
         }
@@ -74,6 +105,7 @@ export default function ListHomestayRequest() {
                 Tell us about your property. Our team will review your details and contact you to proceed with onboarding.
             </p>
             
+            {/* Display submission status */}
             {status === 'success' && (
                 <div className="form" style={{background:'#e6ffed', color:'#22c55e', marginBottom: 20}}>
                     ✅ Request sent successfully! We will contact you shortly.
@@ -84,15 +116,19 @@ export default function ListHomestayRequest() {
                     ❌ Submission failed. Please check your details and network connection.
                 </div>
             )}
+            {/* Display immediate feedback (like CAPTCHA failure) */}
+            {error && !status && (
+                <div className="form" style={{background:'#fee2e2', color:'#dc2626', marginBottom: 20}}>
+                    ❌ Error: {error}
+                </div>
+            )}
             
             <form className="form" onSubmit={handleSubmit} style={{padding: 30}}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                     
-                    {/* Row 1: Name */}
+                    {/* Rows 1-7: Existing Form Fields (omitted for brevity) */}
                     <input className="input" placeholder="First Name *" value={firstName} onChange={e => setFirstName(e.target.value)} required />
                     <input className="input" placeholder="Last Name *" value={lastName} onChange={e => setLastName(e.target.value)} required />
-
-                    {/* Row 2: Contact */}
                     <input className="input" placeholder="Email ID *" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
                     <div style={{ display: 'flex', gap: '5px' }}>
                         <select className="input" style={{ width: 80 }} defaultValue="+91">
@@ -101,8 +137,6 @@ export default function ListHomestayRequest() {
                         </select>
                         <input className="input" placeholder="Mobile Phone *" type="tel" value={phone} onChange={e => setPhone(e.target.value)} required />
                     </div>
-
-                    {/* Row 3: Property Details 1 */}
                     <select className="input" value={location} onChange={e => setLocation(e.target.value)} required>
                         <option value="">Select your property location *</option>
                         <option value="Goa">Goa</option>
@@ -116,8 +150,6 @@ export default function ListHomestayRequest() {
                         <option value="Apartment">Service Apartment</option>
                         <option value="Cottage">Cottage/Bungalow</option>
                     </select>
-
-                    {/* Row 4: Property Details 2 / Source */}
                     <select className="input" value={rooms} onChange={e => setRooms(e.target.value)}>
                         <option value="">How many rooms?</option>
                         <option value="1">1</option>
@@ -130,8 +162,6 @@ export default function ListHomestayRequest() {
                         <option value="Google">Google Search</option>
                         <option value="Social">Social Media</option>
                     </select>
-
-                    {/* Row 5: Link / Description */}
                     <input 
                         className="input" 
                         placeholder="Photos/Website link (if any)" 
@@ -139,8 +169,6 @@ export default function ListHomestayRequest() {
                         onChange={e => setPhotoLink(e.target.value)} 
                         style={{ gridColumn: '1 / -1' }}
                     />
-                    
-                    {/* Row 6: Picture Upload (Mocked for Demo) */}
                     <div style={{ gridColumn: '1 / -1', marginTop: 10 }}>
                         <label className="label">Upload Pictures (Mock Upload)</label>
                         <input 
@@ -152,9 +180,6 @@ export default function ListHomestayRequest() {
                         />
                         <div className="small" style={{marginTop: 5}}>Max 5 files. Your team will review these manually.</div>
                     </div>
-
-
-                    {/* Row 7: Description */}
                     <textarea 
                         className="input" 
                         placeholder="Describe your property" 
@@ -165,9 +190,33 @@ export default function ListHomestayRequest() {
                     />
                 </div>
 
+                {/* --- CAPTCHA SECTION (New, Matching Contact.jsx Style) --- */}
+                <div style={{ 
+                    gridColumn: '1 / -1', 
+                    marginTop: 25, 
+                    paddingTop: 15, 
+                    borderTop: '1px solid #e2e8f0' 
+                }}>
+                    <label className="label">Security Check</label>
+                    <div style={{display:'flex', alignItems:'center', gap:10}}>
+                        <div style={{fontWeight:800, padding:'10px 15px', background:'#f1f5f9', borderRadius:8, border:'1px solid #e2e8f0', minWidth:150}}>
+                            {captcha.question}
+                        </div>
+                        <input 
+                            className="input" 
+                            type="number" 
+                            placeholder="Your answer" 
+                            value={captchaInput} 
+                            onChange={e=>setCaptchaInput(e.target.value)} 
+                            required 
+                            style={{flexGrow:1}}
+                        />
+                    </div>
+                </div>
+                {/* --- END CAPTCHA SECTION --- */}
+
                 <div style={{ marginTop: 25, textAlign: 'center' }}>
                     <button className="btn btn-cta" type="submit" disabled={loading} style={{ 
-                        /* FIX: Changed color to primary teal for final submission CTA */
                         background: '#0ea5a4', 
                         color: 'white', 
                         padding: '12px 30px', 
@@ -175,7 +224,6 @@ export default function ListHomestayRequest() {
                         fontWeight: 700,
                         width: '50%'
                     }}>
-                        {/* FIX: New Button Text */}
                         {loading ? 'Submitting...' : 'Submit Your Homestay'} 
                     </button>
                 </div>

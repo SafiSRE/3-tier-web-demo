@@ -1,4 +1,4 @@
-// backend/models/Homestay.js - ENHANCED
+// backend/models/Homestay.js - REVISED (isApproved added)
 
 import mongoose from 'mongoose';
 
@@ -7,11 +7,13 @@ const homestaySchema = new mongoose.Schema({
   pricePerNight: Number,
   images: [String],
   description: String,
-  // NEW FIELD: Link homestay to the User/Owner who created it
+  // Link homestay to the User/Owner who created it
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, 
   rating: Number, 
   reviews: Number,
-  amenities: [String]
+  amenities: [String],
+  // NEW FIELD: Admin approval status, defaults to false
+  isApproved: { type: Boolean, default: false } 
 });
 
 export default mongoose.model('Homestay', homestaySchema);

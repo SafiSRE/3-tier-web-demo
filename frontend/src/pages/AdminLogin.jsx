@@ -1,7 +1,7 @@
-// frontend/src/pages/AdminLogin.jsx - VERIFIED FINAL VERSION
+// frontend/src/pages/AdminLogin.jsx - REVISED
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // CRITICAL: Ensure useNavigate is imported
+import { useNavigate } from 'react-router-dom';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function AdminLogin(){
@@ -17,19 +17,22 @@ export default function AdminLogin(){
     setLoading(true);
 
     try{
-      // Use the owner login endpoint, but the backend must verify role: 'admin'
-      const res = await fetch(API + '/auth/owner/login', { 
+      // 💡 CRITICAL FIX: Use the new, dedicated Admin Login endpoint
+      const res = await fetch(API + '/auth/admin/login', { 
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({email,password})
       });
       const data = await res.json();
       
+      // We still check for res.ok and role: 'admin' for robustness
       if(res.ok && data.user && data.user.role === 'admin'){
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         nav('/admin/dashboard');
       } else {
+        // The backend now rejects non-admin users BEFORE hitting this check, 
+        // so this message is appropriate.
         setErr('Admin login failed. Check credentials and ensure account has "admin" role.');
       }
       

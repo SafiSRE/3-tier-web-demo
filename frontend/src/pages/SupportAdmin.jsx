@@ -1,6 +1,6 @@
-// frontend/src/pages/SupportAdmin.jsx (NEW FILE)
+// frontend/src/pages/SupportAdmin.jsx - FINAL COMPLETE VERSION (Loading Fix Applied)
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -12,18 +12,14 @@ export default function SupportAdmin() {
   const nav = useNavigate();
   
   const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
+  
+  // CRITICAL FIX: Use useState to store the parsed user object, stabilizing the dependency.
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')));
 
-  useEffect(() => {
-    if (!token || (user && user.role !== 'admin')) {
-      nav('/admin/login', { replace: true });
-      return;
-    }
-    fetchData();
-  }, [token, user, nav]);
-
-  const fetchData = async () => {
+  // Memoize fetchData using useCallback to prevent infinite loop.
+  const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const headers = { Authorization: "Bearer " + token };
       const res = await fetch(API + '/admin/requests', { headers });
@@ -36,7 +32,20 @@ export default function SupportAdmin() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]); // Dependency array only needs 'token'
+
+  useEffect(() => {
+    // 1. Authentication Check
+    if (!token || (user && user.role !== 'admin')) {
+      nav('/admin/login', { replace: true });
+      return;
+    }
+    
+    // 2. Fetch Data
+    fetchData();
+
+  }, [token, user, nav, fetchData]); // Dependencies include stable 'user' and memoized 'fetchData'
+
 
   const handleResolve = async (id) => {
     if (!window.confirm('Mark this request as RESOLVED/PROCESSED?')) return;
