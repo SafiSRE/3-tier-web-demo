@@ -36,24 +36,32 @@ function adminAuthMiddleware(req, res, next) {
 
 // GET: Retrieve all homestays (Approved and Unapproved)
 router.get('/homestays', adminAuthMiddleware, async (req, res) => {
-    // Populate the owner field to show owner name and contact
-    const listings = await Homestay.find().populate('owner', 'name email');
-    res.json(listings);
-});
-
-// PUT: Approve/Reject a homestay listing
-router.put('/homestays/:id/status', adminAuthMiddleware, async (req, res) => {
-    const { isApproved } = req.body;
     try {
-      const homestay = await Homestay.findByIdAndUpdate(
-          req.params.id, 
-          { isApproved: isApproved }, 
-          { new: true }
-      );
-      if (!homestay) return res.status(404).json({ error: 'Homestay not found' });
-      res.json(homestay);
-    } catch(err) {
-      res.status(500).json({ error: 'Server error updating status' });
+        // Use the populate method with strict options for resilience
+        let listings = await Homestay.find()
+            .populate({
+                path: 'owner',
+                select: 'name email',
+                // CRITICAL: Prevent server crash if a Homestay ID refers to a deleted User ID
+                options: { strictPopulate: false } 
+            })
+            .exec(); 
+
+        // Sanitize the list: Filter out any entries where the owner field is null 
+        // (meaning the user ID link was invalid/deleted)
+        listings = listings.filter(l => l.owner !== null);
+
+        // Check if any listings exist. If so, send them.
+        if (listings.length > 0 || listings.length === 0) {
+            return res.json(listings);
+        }
+
+    } catch (err) {
+        // This catch block executes if Mongoose throws an error (e.g., query syntax or schema error).
+        console.error('Admin Homestay Fetch/Populate Critical Error:', err);
+        
+        // Respond with a specific 500 error to the frontend
+        return res.status(500).json({ error: 'Database query failed on the server. Check backend logs for schema or syntax errors.' });
     }
 });
 

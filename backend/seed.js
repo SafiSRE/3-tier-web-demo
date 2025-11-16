@@ -49,11 +49,14 @@ async function run() {
       ...base,
       images,
       description: `Beautiful stay at ${base.name}`,
-      owner: ownerId // LINK HOMESTAY TO OWNER
+      owner: ownerId, // LINK HOMESTAY TO OWNER
+      rating: 4.2, 
+      reviews: 15,
+      amenities: ['wifi', 'breakfast']
     });
     inserted.push(doc);
   }
-  console.log('Seeded', inserted.length, 'homestays.');
+  console.log('Seeded', inserted.length, 'homestays linked to owner:', owner.name);
   process.exit(0);
 }
 
