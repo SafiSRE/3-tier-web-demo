@@ -17,7 +17,7 @@
 ## Notes
 - Seed backend data (homestays) is available via `backend/seed.js`. When backend is running locally, you can run `npm run seed` inside the backend container or host to populate 10 homestays.
 - Default JWT secret is in docker-compose env `JWT_SECRET`. Change it for production.
-- Coupon code implemented on frontend: `VISTA10` gives 10% off final amount.
+- Coupon code implemented on frontend:
 - GST 18% is applied to subtotal and shown in totals.
 
 Enjoy! 🏖️
